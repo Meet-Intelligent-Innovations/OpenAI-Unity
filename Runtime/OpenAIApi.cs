@@ -56,7 +56,9 @@ namespace OpenAI
             },
             Culture = CultureInfo.InvariantCulture
         };
-        
+
+        #region Request
+
         /// <summary>
         ///     Dispatches an HTTP request to the specified path with the specified method and optional payload.
         /// </summary>
@@ -197,6 +199,11 @@ namespace OpenAI
             return Encoding.UTF8.GetBytes(json);
         }
 
+        #endregion Request
+
+        #region APICalls
+
+        #region Models
         /// <summary>
         ///     Lists the currently available models, and provides basic information about each one such as the owner and availability.
         /// </summary>
@@ -216,7 +223,9 @@ namespace OpenAI
             var path = $"{BASE_PATH}/models/{id}";
             return await DispatchRequest<OpenAIModelResponse>(path, UnityWebRequest.kHttpVerbGET);
         }
+        #endregion Models
 
+        #region ChatCompletion
         /// <summary>
         ///     Creates a chat completion request as in ChatGPT.
         /// </summary>
@@ -245,7 +254,9 @@ namespace OpenAI
             
             DispatchRequest(path, UnityWebRequest.kHttpVerbPOST, onResponse, onComplete, token, payload);
         }
-        
+        #endregion ChatCompletion
+
+        #region Images
         /// <summary>
         ///     Creates an image given a prompt.
         /// </summary>
@@ -296,7 +307,9 @@ namespace OpenAI
             
             return await DispatchRequest<CreateImageResponse>(path, form);
         }
-       
+        #endregion Images
+
+        #region Embeddings
         /// <summary>
         ///     Creates an embedding vector representing the input text.
         /// </summary>
@@ -308,7 +321,9 @@ namespace OpenAI
             var payload = CreatePayload(request);
             return await DispatchRequest<CreateEmbeddingsResponse>(path, UnityWebRequest.kHttpVerbPOST, payload);
         }
+        #endregion Embeddings
 
+        #region Audio
         /// <summary>
         ///     Transcribes audio into the input language.
         /// </summary>
@@ -361,7 +376,10 @@ namespace OpenAI
 
             return await DispatchRequest<CreateAudioResponse>(path, form);
         }
-        
+
+        #endregion Audio
+
+        #region Files
         /// <summary>
         ///     Returns a list of files that belong to the user's organization.
         /// </summary>
@@ -422,7 +440,9 @@ namespace OpenAI
             var path = $"{BASE_PATH}/files/{id}/content";
             return await DispatchRequest<OpenAIFileResponse>(path, UnityWebRequest.kHttpVerbGET);
         }
-        
+        #endregion Files
+
+        #region Finetuning
         /// <summary>
         ///     Manage fine-tuning jobs to tailor a model to your specific training data.
         ///     Related guide: <a href="https://beta.openai.com/docs/guides/fine-tuning">Fine-tune models</a>
@@ -493,7 +513,9 @@ namespace OpenAI
             var path = $"{BASE_PATH}/models/{model}";
             return await DispatchRequest<DeleteResponse>(path, UnityWebRequest.kHttpVerbDELETE);
         }
+        #endregion Finetuning
 
+        #region Moderation
         /// <summary>
         ///     Classifies if text violates OpenAI's Content Policy
         /// </summary>
@@ -505,5 +527,7 @@ namespace OpenAI
             var payload = CreatePayload(request);
             return await DispatchRequest<CreateModerationResponse>(path, UnityWebRequest.kHttpVerbPOST, payload);
         }
+        #endregion Moderation
+        #endregion APICalls
     }
 }
