@@ -167,7 +167,20 @@ namespace OpenAI
         public string Text { get; set; }
     }
     #endregion
-    
+
+    #region TTS Data Types
+    public class CreateTTSRequest
+    {
+        public string Model { get; set; }
+        public string Input { get; set; }
+
+        public string Voice { get; set; } = "alloy";
+
+        public string ResponseFormat { get; set; } = "wav";
+        public float Speed { get; set; } = 1.0f;
+    }
+    #endregion TTS Data Types
+
     #region Images API Data Types
     public class CreateImageRequestBase
     {

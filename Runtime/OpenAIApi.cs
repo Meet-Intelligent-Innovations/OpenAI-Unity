@@ -188,6 +188,30 @@ namespace OpenAI
         }
 
         /// <summary>
+        ///     Dispatches an HTTP request to the specified path with the specified method and payload.
+        /// </summary>
+        /// <param name="path">The path to send the request to.</param>
+        /// <param name="method">The HTTP method to use for the request.</param>
+        /// <param name="payload">An byte array of json payload to include in the request.</param>
+        /// <returns>A Task containing raw bytes of the response to the request.</returns>
+        private async Task<byte[]> DispatchDataRequest(string path, string method, byte[] payload)
+        {
+            using (var request = UnityWebRequest.Put(path, payload))
+            {
+                request.method = method;
+                request.SetHeaders(Configuration, ContentType.ApplicationJson);
+
+                var asyncOperation = request.SendWebRequest();
+
+                while (!asyncOperation.isDone) await Task.Yield();
+
+                return request.downloadHandler.data;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         ///     Create byte array payload from the given request object that contains the parameters.
         /// </summary>
         /// <param name="request">The request object that contains the parameters of the payload.</param>
@@ -528,6 +552,16 @@ namespace OpenAI
             return await DispatchRequest<CreateModerationResponse>(path, UnityWebRequest.kHttpVerbPOST, payload);
         }
         #endregion Moderation
+
+        #region TTS
+        public async Task<byte[]> CreateTTS(CreateTTSRequest request)
+        {
+            var path = $"{BASE_PATH}/audio/speech";
+            var payload = CreatePayload(request);
+
+            return await DispatchDataRequest(path, UnityWebRequest.kHttpVerbPOST, payload);
+        }
+        #endregion TTS
         #endregion APICalls
     }
 }
